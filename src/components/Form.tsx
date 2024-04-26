@@ -1,23 +1,42 @@
-import { useState } from "react";
+import { useState, Dispatch } from "react";
 import { categories } from "../data/categories";
 import { Activity } from "../types";
+import { ActivityActions } from "../reducer/activity-reducer";
+import { v4 as uuidv4 } from 'uuid'
 
-const Form = () => {
-  const [activity, setActivity] = useState<Activity>({
+type FormProps = {
+  dispatch: Dispatch<ActivityActions>
+}
+
+const Form = ({dispatch}: FormProps) => {
+
+  const initialStateActivity: Activity = {
+    id: uuidv4(),
     category: 1,
     description: "",
     calories: 0,
-  });
+  }
+
+  const [activity, setActivity] = useState<Activity>(initialStateActivity);
 
   const isValidSubmit = () => {
     const { description, calories } = activity;
     console.log(description.trim() !== "" && calories > 0)
-    // console.log(calories)
     return description.trim() !== "" && calories > 0;
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch({type: "save-activity", payload: {newActivity: activity}})
+
+    console.log("submit al boton");
+    setActivity({...initialStateActivity, id: uuidv4()});
+
+  }
+
   return (
-    <form className="space-y-5 bg-white shadow p-10 rounded-lg">
+    <form className="space-y-5 bg-white shadow p-10 rounded-lg" onSubmit={(e) => handleSubmit(e)}>
       <div className="grid grid-cols-1 gap-3">
         <label className="font-bold" htmlFor="category">
           Categoria:
