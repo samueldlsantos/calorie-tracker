@@ -1,14 +1,15 @@
-import { useState, Dispatch } from "react";
+import { useState, Dispatch, useEffect } from "react";
 import { categories } from "../data/categories";
 import { Activity } from "../types";
-import { ActivityActions } from "../reducer/activity-reducer";
+import { ActivityActions, ActivityState } from "../reducer/activity-reducer";
 import { v4 as uuidv4 } from 'uuid'
 
 type FormProps = {
-  dispatch: Dispatch<ActivityActions>
+  dispatch: Dispatch<ActivityActions>,
+  state: ActivityState
 }
 
-const Form = ({dispatch}: FormProps) => {
+const Form = ({dispatch, state}: FormProps) => {
 
   const initialStateActivity: Activity = {
     id: uuidv4(),
@@ -19,9 +20,18 @@ const Form = ({dispatch}: FormProps) => {
 
   const [activity, setActivity] = useState<Activity>(initialStateActivity);
 
+  useEffect(( )=> {
+if(state.activeId){
+  console.log("El activeId cambio: " , state.activeId)
+   const activityActivated  = state.activities.filter( ({ id }) => id === state.activeId)[0];
+
+   setActivity(activityActivated)
+
+}
+  }, [state.activeId])
+
   const isValidSubmit = () => {
     const { description, calories } = activity;
-    console.log(description.trim() !== "" && calories > 0)
     return description.trim() !== "" && calories > 0;
   };
 
@@ -30,7 +40,6 @@ const Form = ({dispatch}: FormProps) => {
 
     dispatch({type: "save-activity", payload: {newActivity: activity}})
 
-    console.log("submit al boton");
     setActivity({...initialStateActivity, id: uuidv4()});
 
   }
