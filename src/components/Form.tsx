@@ -1,15 +1,11 @@
-import { useState, Dispatch, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { categories } from "../data/categories";
 import { Activity } from "../types";
-import { ActivityActions, ActivityState } from "../reducer/activity-reducer";
 import { v4 as uuidv4 } from 'uuid'
+import { useCalorieTracker } from "../hooks/useCalorieTracker";
 
-type FormProps = {
-  dispatch: Dispatch<ActivityActions>,
-  state: ActivityState
-}
 
-const Form = ({dispatch, state}: FormProps) => {
+const Form = () => {
 
   const initialStateActivity: Activity = {
     id: uuidv4(),
@@ -18,6 +14,7 @@ const Form = ({dispatch, state}: FormProps) => {
     calories: 0,
   }
 
+  const {state, dispatch} = useCalorieTracker();
   const [activity, setActivity] = useState<Activity>(initialStateActivity);
 
   useEffect(( )=> {

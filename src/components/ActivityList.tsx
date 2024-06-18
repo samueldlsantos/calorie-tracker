@@ -1,23 +1,19 @@
-import { Dispatch } from "react";
-import { Activity } from "../types";
 import { categories } from "../data/categories";
 import { PencilSquareIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { ActivityActions } from "../reducer/activity-reducer";
+import { useCalorieTracker } from "../hooks/useCalorieTracker";
 
 
-type ActivityListProps = {
-  activities: Activity[];
-  dispatch: Dispatch<ActivityActions>
-};
 
-function ActivityList({ activities, dispatch }: ActivityListProps) {
+function ActivityList() {
+  const {state, dispatch} = useCalorieTracker();
+
   return (
     <>
       <h2 className="text-4xl font-bold text-slate-600 text-center">
         Comida y Actividades
       </h2>
-      {activities.length > 0 ? (
-        activities.map((activity) => (
+      {state.activities.length > 0 ? (
+        state.activities.map((activity) => (
           <div
             key={activity.id}
             className="px-5 py-10 mt-5 bg-white flex justify-between"
